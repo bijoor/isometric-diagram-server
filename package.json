@@ -1,5 +1,5 @@
 {
-  "name": "Isometric Shape Compiler Server",
+  "name": "isometric-diagram-server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
