@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Isometric Shapes Compiler Testing UI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        #shapesList, #compositionForm {
+            margin-bottom: 20px;
+        }
+        #result {
+            border: 1px solid #ccc;
+            padding: 10px;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SVG Isometric Shapes Compiler Testing UI</h1>
+
+    <h2>Available Shapes</h2>
+    <div id="shapesList">Loading shapes...</div>
+
+    <h2>Compose Diagram</h2>
+    <form id="compositionForm">
+        <div>
+            <label for="shape3D">Select 3D Shape:</label>
+            <select id="shape3D" required></select>
+        </div>
+        <div>
+            <label for="frontShape">Front Face 2D Shape:</label>
+            <select id="frontShape"></select>
+        </div>
+        <div>
+            <label for="sideShape">Side Face 2D Shape:</label>
+            <select id="sideShape"></select>
+        </div>
+        <div>
+            <label for="topShape">Top Face 2D Shape:</label>
+            <select id="topShape"></select>
+        </div>
+        <div>
+            <label for="debugMode">
+                <input type="checkbox" id="debugMode">
+                Debug Mode (Show bounding boxes)
+            </label>
+        </div>
+        <button type="submit">Compose Diagram</button>
+    </form>
+
+    <h2>Result</h2>
+    <div id="result"></div>
+
+    <script>
+        // Fetch available shapes
+        fetch('/shapes')
+            .then(response => response.json())
+            .then(shapes => {
+                const shapesList = document.getElementById('shapesList');
+                const shape3DSelect = document.getElementById('shape3D');
+                const frontShapeSelect = document.getElementById('frontShape');
+                const sideShapeSelect = document.getElementById('sideShape');
+                const topShapeSelect = document.getElementById('topShape');
+
+                shapesList.innerHTML = '<ul>' + shapes.map(shape => `<li>${shape.name} (${shape.type}, ${shape.face || 'N/A'})</li>`).join('') + '</ul>';
+
+                shapes.forEach(shape => {
+                    const option = new Option(shape.name, shape.name);
+                    if (shape.type === '3D') {
+                        shape3DSelect.add(option);
+                    } else {
+                        if (shape.face === 'front') frontShapeSelect.add(option.cloneNode(true));
+                        if (shape.face === 'side') sideShapeSelect.add(option.cloneNode(true));
+                        if (shape.face === 'top') topShapeSelect.add(option.cloneNode(true));
+                    }
+                });
+            });
+
+        // Handle form submission
+        document.getElementById('compositionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const shape3D = document.getElementById('shape3D').value;
+            const frontShape = document.getElementById('frontShape').value;
+            const sideShape = document.getElementById('sideShape').value;
+            const topShape = document.getElementById('topShape').value;
+            const debugMode = document.getElementById('debugMode').checked;
+
+            const compositionData = {
+                objects: [{
+                    shape: shape3D,
+                    front: frontShape ? [frontShape] : [],
+                    side: sideShape ? [sideShape] : [],
+                    top: topShape ? [topShape] : []
+                }],
+                debug: debugMode
+            };
+
+            fetch('/compose', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(compositionData)
+            })
+            .then(response => response.text())
+            .then(svg => {
+                document.getElementById('result').innerHTML = svg;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'Error composing diagram: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>

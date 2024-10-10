@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Isometric Shapes Server Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        #shapesList {
+            margin-bottom: 20px;
+        }
+        #svgDisplay {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        select {
+            margin: 10px 0;
+            padding: 5px;
+            width: 100%;
+        }
+        #svgRenderingPanel {
+            background-color: #e0e0e0;
+            padding: 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SVG Isometric Shapes Server Test</h1>
+    
+    <div id="shapesList">
+        <h2>Available Shapes</h2>
+        <select id="shapeSelect">
+            <option value="">Select a shape</option>
+        </select>
+    </div>
+    
+    <div id="svgDisplay">
+        <h2>SVG Content</h2>
+        <div id="svgContent"></div>
+        <div id="svgRenderingPanel"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const shapeSelect = document.getElementById('shapeSelect');
+            const svgContent = document.getElementById('svgContent');
+            const svgRenderingPanel = document.getElementById('svgRenderingPanel');
+
+            // Fetch available shapes
+            fetch('/shapes')
+                .then(response => response.json())
+                .then(shapes => {
+                    shapes.forEach(shape => {
+                        const option = document.createElement('option');
+                        option.value = shape.name;
+                        option.textContent = `${shape.name} (${shape.type}${shape.face ? `, ${shape.face}` : ''})`;
+                        shapeSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching shapes:', error));
+
+            // Display selected shape's SVG content
+            shapeSelect.addEventListener('change', function() {
+                const selectedShape = this.value;
+                if (selectedShape) {
+                    fetch('/shapes')
+                        .then(response => response.json())
+                        .then(shapes => {
+                            const shape = shapes.find(s => s.name === selectedShape);
+                            if (shape) {
+                                svgContent.innerHTML = `
+                                    <h3>${shape.name}</h3>
+                                    <p>Type: ${shape.type}</p>
+                                    ${shape.face ? `<p>Face: ${shape.face}</p>` : ''}
+                                    <pre><code>${escapeHtml(shape.svgContent)}</code></pre>
+                                `;
+                                svgRenderingPanel.innerHTML = shape.svgContent;
+                            }
+                        })
+                        .catch(error => console.error('Error fetching shape details:', error));
+                } else {
+                    svgContent.innerHTML = '';
+                    svgRenderingPanel.innerHTML = '';
+                }
+            });
+
+            // Helper function to escape HTML special characters
+            function escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+        });
+    </script>
+</body>
+</html>
