@@ -10,13 +10,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
 
 // CORS configuration
 const corsOptions = {
-  origin: '*',  // This allows all origins
-  methods: ['GET', 'POST'],  // Allow both GET and POST requests
-  allowedHeaders: ['Content-Type', 'Authorization']
+    origin: '*',  // This allows all origins
+    methods: ['GET', 'POST'],  // Allow both GET and POST requests
+    allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));  // Use the CORS middleware with our configuration
@@ -30,7 +33,7 @@ const shapesLibrary = new Map();
 // Function to load shapes library
 async function loadShapesLibrary(directoryPath) {
     const files = await fsPromises.readdir(directoryPath);
-    
+
     for (const file of files) {
         if (path.extname(file) === '.csv') {
             await new Promise((resolve) => {
