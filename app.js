@@ -4,24 +4,22 @@ import { promises as fsPromises } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import csv from 'csv-parser';
-import cors from 'cors';  // Import the cors package
+import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const SOCKET = '/tmp/nginx.socket';
 
 // CORS configuration
 const corsOptions = {
-    origin: '*',  // This allows all origins
-    methods: ['GET', 'POST'],  // Allow both GET and POST requests
+    origin: '*',
+    methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-app.use(cors(corsOptions));  // Use the CORS middleware with our configuration
-
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -31,7 +29,7 @@ const shapesLibrary = new Map();
 // Function to load shapes library
 async function loadShapesLibrary(directoryPath) {
     const files = await fsPromises.readdir(directoryPath);
-
+    
     for (const file of files) {
         if (path.extname(file) === '.csv') {
             await new Promise((resolve) => {
@@ -77,6 +75,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(SOCKET, () => {
-    console.log(`Server running on ${SOCKET}`);
-  });
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
