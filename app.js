@@ -12,9 +12,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
 // CORS configuration
 const corsOptions = {
-    origin: '*',
+    origin: process.env.NODE_ENV === 'production'
+        ? 'https://bijoor.github.io/isometric-compiler-ui'
+        : 'http://localhost:5173', // Assuming Vite's default port
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };
@@ -77,5 +80,5 @@ app.get('/', (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
