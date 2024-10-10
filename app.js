@@ -10,10 +10,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = process.env.PORT || 3000;
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Server running on port ${port}`);
-});
+const PORT = process.env.PORT || 3000;
+const SOCKET = '/tmp/nginx.socket';
+
+app.listen(SOCKET, () => {
+    console.log(`Server running on ${SOCKET}`);
+  });
 
 // CORS configuration
 const corsOptions = {
