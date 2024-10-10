@@ -13,10 +13,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SOCKET = '/tmp/nginx.socket';
 
-app.listen(SOCKET, () => {
-    console.log(`Server running on ${SOCKET}`);
-  });
-
 // CORS configuration
 const corsOptions = {
     origin: '*',  // This allows all origins
@@ -81,6 +77,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(port, () => {
-    console.log(`SVG Isometric Shapes Compiler server listening at http://localhost:${port}`);
-});
+app.listen(SOCKET, () => {
+    console.log(`Server running on ${SOCKET}`);
+  });
