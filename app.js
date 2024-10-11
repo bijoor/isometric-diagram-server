@@ -42,7 +42,7 @@ async function loadShapesLibrary(directoryPath) {
                         shapesLibrary.set(row.name, {
                             svgFile: row.svgFile,
                             type: row.type,
-                            face: row.face
+                            attach: row.attach
                         });
                     })
                     .on('end', resolve);
@@ -63,7 +63,7 @@ app.get('/shapes', async (req, res) => {
             shapes.push({
                 name,
                 type: data.type,
-                face: data.face,
+                attach: data.attach,
                 svgContent
             });
         } catch (error) {

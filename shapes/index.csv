@@ -1,6 +1,6 @@
-name,svgFile,type,face
+name,svgFile,type,attach
 server,base-server.svg,3D,
 database,base-database.svg,3D,
-grill-front,grill-front.svg,2D,front
-grill-side,grill-side.svg,2D,side
+grill-left,grill-left.svg,2D,left
+grill-right,grill-right.svg,2D,right
 flowchart-top,flowchart-top.svg,2D,top
