@@ -1,6 +1,8 @@
 name,svgFile,type,attachTo
 server,base-server.svg,3D,
 database,base-database.svg,3D,
+blueserver,blue-server.svg,3D,
 grill-left,grill-left.svg,2D,front-left
 grill-right,grill-right.svg,2D,front-right
 flowchart-top,flowchart-top.svg,2D,top
+something,something.svg,2D,top
