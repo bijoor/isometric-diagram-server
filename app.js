@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 // CORS configuration
 const corsOptions = {
     origin: process.env.NODE_ENV === 'production'
-        ? 'https://bijoor.github.io/isometric-compiler-ui'
+        ? 'https://bijoor.github.io'
         : 'http://localhost:5173', // Assuming Vite's default port
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization']
