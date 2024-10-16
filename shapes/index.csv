@@ -1,4 +1,5 @@
 name,svgFile,type,attachTo
+layer4x3,layer4x3.svg,3D,
 microservice,cubical-base.svg,3D,
 application,cuboidal-base.svg,3D,
 database,cylinder.svg,3D,
@@ -9,3 +10,4 @@ grill-right,grill-right2D.svg,2D,front-right
 dial-left,dial-left2D.svg,2D,front-left
 ai-model,ai-model2D.svg,2D,top
 bits-on-screen,bits-on-screen2D.svg,2D,screen
+
